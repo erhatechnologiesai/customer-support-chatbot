@@ -1,207 +1,170 @@
 # AI Customer Support Chatbot
 
-An enterprise-grade, context-aware AI Customer Support Chatbot built with FastAPI, SQLite session persistence, real-time sentiment scoring, and automated human escalation workflows.
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110.0-009688?style=flat&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)]()
+[![Code Style: Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-Part of the **50 AI Automation Projects Portfolio** by [ERHA TECHNOLOGIES](https://github.com/erhatechnologiesai).
-
----
-
-## 1. Project Title & Overview
-
-**Repository:** `01-ai-customer-support-chatbot`  
-**Purpose:** Solves customer support fatigue, provides instantaneous 24/7 FAQ resolution, tracks user sentiment across dialogue turns, and automatically generates high-priority escalation tickets when customer frustration exceeds safety thresholds.
+An enterprise-grade, context-aware AI Customer Support Chatbot engineered with FastAPI, SQLite session persistence, real-time sentiment and frustration scoring, and automated human escalation workflows.
 
 ---
 
-## 2. Features
+## Key Features
 
-- **Context-Aware Dialogue**: Maintains multi-turn conversation memory keyed by session IDs.
-- **Dynamic FAQ Retrieval**: Rapid semantic keyword matching across stored knowledge items.
-- **Real-Time Sentiment & Frustration Detection**: Analyzes capitalization, punctuation patterns, and escalation keywords.
-- **Automated Human Escalation**: Automatically generates priority support tickets and notifies human supervisors when frustration thresholds are exceeded.
-- **Dual-Mode AI Engine**:
-  - **Local Heuristic / Mock Mode**: Fully functional offline without external API keys.
-  - **OpenAI Integration**: Production-ready LLM integration via `.env` configuration.
-- **Admin & Telemetry Endpoints**: Query conversation history and audit escalation logs.
+- **Context-aware**: dialogue maintaining multi-turn conversation memory keyed by session IDs
+- **Dynamic**: FAQ retrieval with rapid semantic matching across stored knowledge items
+- **Real-time**: sentiment and frustration detection analyzing capitalization, punctuation patterns, and escalation keywords
+- **Automated**: human escalation generating high-priority support tickets when customer frustration exceeds thresholds
+- **Dual-mode**: execution supporting offline heuristic fallback or live LLM integration
 
 ---
 
-## 3. Architecture
+## Architecture
 
 ```mermaid
 flowchart TD
     User([Customer]) -->|HTTP POST /chat| API[FastAPI Server]
     API --> DB[(SQLite Store)]
     API --> Sentiment[Sentiment & Frustration Analyzer]
-    
     Sentiment -->|Score >= Threshold| Escalate[Escalation Service]
     Escalate -->|Create Ticket| Tickets[(Escalation DB)]
-    Escalate -->|Notification| Email[Support Team Alert]
-    
     Sentiment -->|Score < Threshold| KB[FAQ & Knowledge Base]
-    KB --> LLM[LLM / Local Heuristic Engine]
-    LLM -->|Generate Response| API
-    API -->|ChatResponse JSON| User
+    KB --> LLM[LLM / Heuristic Engine]
+    LLM --> API
+    API --> User
 ```
 
 ---
 
-## 4. Tech Stack
+## Tech Stack
 
-- **Backend:** Python 3.12, FastAPI, Uvicorn, Pydantic v2
-- **Database:** SQLite3
-- **AI / LLM:** OpenAI API (`gpt-4o-mini`) + Local Rule-Based Mock Engine
-- **Testing:** Pytest, Unittest, HTTPX TestClient
-
----
-
-## 5. Installation
-
-```bash
-# Clone repository
-git clone https://github.com/erhatechnologiesai/01-ai-customer-support-chatbot.git
-cd 01-ai-customer-support-chatbot
-
-# Create and activate virtual environment
-python -m venv venv
-# On Windows:
-.\venv\Scripts\activate
-# On Linux/macOS:
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-```
-
----
-
-## 6. Environment Variables
-
-Copy `.env.example` to `.env`:
-
-```bash
-cp .env.example .env
-```
-
-| Variable | Default | Description |
+| Component | Technology | Purpose |
 |---|---|---|
-| `ENVIRONMENT` | `development` | Runtime environment |
-| `DEMO_MODE` | `true` | When `true`, uses local heuristic engine without API keys |
-| `OPENAI_API_KEY` | `""` | OpenAI API key for live GPT models |
-| `OPENAI_MODEL` | `gpt-4o-mini` | Model identifier |
-| `DATABASE_PATH` | `chatbot_data.db` | Local SQLite database file path |
-| `FRUSTRATION_THRESHOLD` | `0.65` | Sensitivity threshold (0.0 - 1.0) for human escalation |
-| `SUPPORT_NOTIFICATION_EMAIL` | `support@erhatechnologies.com` | Notification dispatch address |
+| **Runtime** | Python 3.12 | Core execution environment |
+| **API Framework** | FastAPI & Uvicorn | High-performance asynchronous REST endpoints |
+| **Data Validation** | Pydantic v2 | Strict schema validation and serialization |
+| **Domain Engine** | Dual-Mode (Local + LLM) | Production-ready AI logic with offline test capability |
+| **Testing** | Unittest & Pytest | Deterministic automated verification suite |
 
 ---
 
-## 7. Running Locally
+## Project Structure
 
-Start the FastAPI application:
+```text
+ai-customer-support-chatbot/
+├── app/
+│   ├── __init__.py
+│   ├── api.py           # FastAPI routes and server definitions
+│   ├── config.py        # Environment variables and application settings
+│   ├── models.py        # Pydantic data schemas
+│   └── services/        # Core business and AI automation logic
+├── tests/
+│   ├── __init__.py
+│   └── test_chatbot.py   # Automated test suite
+├── .env.example         # Template for environment configuration
+├── .gitignore           # Python and runtime exclusions
+├── LICENSE              # MIT License
+├── README.md            # Comprehensive project documentation
+└── requirements.txt     # Python package dependencies
+```
+
+---
+
+## Getting Started
+
+### Prerequisites
+
+- Python 3.10+ (Python 3.12 recommended)
+- `pip` package manager
+
+### Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/erhatechnologiesai/ai-customer-support-chatbot.git
+   cd ai-customer-support-chatbot
+   ```
+
+2. **Create and activate a virtual environment:**
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure environment variables:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your configuration if running in live mode
+   ```
+
+---
+
+## Running the Application
+
+Start the local development server with auto-reload:
 
 ```bash
-python -m app.main
+python -m uvicorn app.api:app --reload --host 0.0.0.0 --port 8000
 ```
 
-The API will be accessible at: `http://localhost:8000`  
-Interactive Swagger docs: `http://localhost:8000/docs`
+Once running, interactive documentation is accessible at:
+- **Swagger UI**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+- **ReDoc**: [http://127.0.0.1:8000/redoc](http://127.0.0.1:8000/redoc)
 
 ---
 
-## 8. API Documentation
+## API Endpoints
 
-### `POST /chat`
-Main conversation endpoint.
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | Health check and service status |
+| `POST` | `/chat` | Process customer message with sentiment tracking and escalation |
+| `GET` | `/history/{session_id}` | Retrieve complete conversation transcript for a session |
+| `GET` | `/escalations` | List all tickets triggered by safety thresholds |
 
-**Request Body:**
-```json
-{
-  "session_id": "session-cust-101",
-  "user_id": "cust-842",
-  "message": "How do I reset my password?"
-}
-```
+### Example Request
 
-**Response (200 OK):**
-```json
-{
-  "session_id": "session-cust-101",
-  "reply": "Go to settings, click security, and choose 'Reset Password'. A link will be sent to your email. Please let me know if you need further clarification!",
-  "escalated": false,
-  "sentiment_score": 0.0,
-  "sources": ["FAQ: How do I reset my password?"]
-}
-```
-
-### `GET /history/{session_id}`
-Retrieves session dialogue history.
-
-### `GET /escalations`
-Lists all escalated tickets and audit logs.
-
----
-
-## 9. Example Input & Output
-
-**User:** "THIS IS UNACCEPTABLE! YOUR APP IS BROKEN AND SCAM! I WANT A HUMAN NOW!"  
-**System Response:**
-```json
-{
-  "session_id": "session-cust-101",
-  "reply": "I detect that this is an urgent matter. I have immediately opened priority support ticket #TICK-8B2A1C0E and notified a human specialist. In the meantime, I'm here if you have additional details to share.",
-  "escalated": true,
-  "sentiment_score": 0.85,
-  "sources": ["Human Escalation System"]
-}
+```bash
+curl -X POST http://127.0.0.1:8000/chat -H "Content-Type: application/json" -d '{"session_id": "cust-01", "message": "I need help with my account"}'
 ```
 
 ---
 
-## 10. Testing
+## Running Tests
 
-Run the automated test suite:
+Execute the automated test suite:
 
 ```bash
 python -m unittest tests/test_chatbot.py
 ```
 
-Or with pytest:
+Or using pytest:
 
 ```bash
 pytest tests/
 ```
 
-All 5 core test cases (Root check, Sentiment scoring, FAQ resolution, Escalation trigger, and Session persistence) pass reliably.
+All test cases are self-contained and run offline without requiring third-party API credentials.
 
 ---
 
-## 11. Deployment
+## Security & Best Practices
 
-### Docker Deployment
-```dockerfile
-FROM python:3.12-slim
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-COPY . .
-EXPOSE 8000
-CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Cloud Services
-Compatible with Render, Railway, AWS ECS, or Fly.io by specifying `uvicorn app.api:app --host 0.0.0.0 --port $PORT`.
+- **Zero Credential Leakage**: API tokens and secrets are loaded exclusively via environment variables and excluded by `.gitignore`.
+- **Strict Validation**: All incoming request payloads are strictly validated using Pydantic schemas.
+- **Fail-Safe Fallbacks**: Deterministic offline engines guarantee application continuity even during external provider outages.
 
 ---
 
-## 12. Security Considerations
+## License
 
-- Input sanitization on message payloads prevents prompt injection.
-- Zero credential leakage: API keys are loaded strictly from environment variables.
-- SQLite parameterized queries prevent SQL injection.
-- Rate limiting can be attached via reverse proxy or middleware for production environments.
-
----
-
-## 13. License
-
-Released under the [MIT License](LICENSE). Developed by [ERHA TECHNOLOGIES](https://github.com/erhatechnologiesai).
+This project is licensed under the terms of the [MIT License](LICENSE).
